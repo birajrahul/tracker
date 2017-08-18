@@ -1,9 +1,7 @@
 package egen.service;
 
 
-import egen.entity.Readings;
 import egen.entity.Vehicle;
-import egen.exception.BadRequestException;
 import egen.exception.ResourceNotFoundException;
 import egen.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +16,16 @@ import java.util.List;
 public class VehicleServiceimpl implements VehicleService {
 
     @Autowired
-    VehicleRepository repository;
+    VehicleRepository vehicleRepository;
 
     @Transactional(readOnly = true)
     public List<Vehicle> finaAll() {
-        return repository.finaAll();
+        return vehicleRepository.finaAll();
     }
 
     @Transactional(readOnly = true)
     public Vehicle findOne(String id) {
-        Vehicle existing= repository.findByVin(id);
+        Vehicle existing= vehicleRepository.findByVin(id);
         if(existing==null){
             // exception handling 404
             throw new ResourceNotFoundException("Vehicle with "+id + " doesn't exist");
@@ -38,34 +36,34 @@ public class VehicleServiceimpl implements VehicleService {
     @Transactional
     public Vehicle create(Vehicle vehicle) {
 
-        Vehicle existing = repository.findByVin(vehicle.getVin());
+        Vehicle existing = vehicleRepository.findByVin(vehicle.getVin());
         if (existing != null) {
 //            // esception handling 400 Bad request
 //            throw new BadRequestException("Vehicle with " + veh.getVin() + " already exists");
                 return this.update(vehicle);
 
         }
-        return repository.create(vehicle);
+        return vehicleRepository.create(vehicle);
 
     }
 
     @Transactional
     public Vehicle update(Vehicle vehicle) {
 
-        return repository.update(vehicle);
+        return vehicleRepository.update(vehicle);
     }
 
 
 
     @Transactional
     public void delete(String vin) {
-        Vehicle existing= repository.findByVin(vin);
+        Vehicle existing= vehicleRepository.findByVin(vin);
         if(existing==null){
             // exception handling 404
             throw new ResourceNotFoundException("Vehicle with "+vin + " doesn't exist");
 
         }
-        repository.delete(existing);
+        vehicleRepository.delete(existing);
 
     }
 }

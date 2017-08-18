@@ -3,9 +3,11 @@ package egen.controller;
 
 import egen.entity.Readings;
 import egen.entity.Vehicle;
+import egen.service.AlertService;
 import egen.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -28,20 +30,22 @@ import java.util.List;
 public class VehicleController {
 
     @Autowired
-    VehicleService service;
+    VehicleService vehicleService;
+    @Autowired
+    AlertService alertService;
 
     // Consumes and produces are not required for latest update of spring
     @RequestMapping(method = RequestMethod.GET,value = "vehicles", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 
     public List<Vehicle> findAll(){
 
-        return service.finaAll();
+        return vehicleService.finaAll();
     }
 
     @RequestMapping(method = RequestMethod.GET,value = "{vin}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     // path variable for converting the link id to String
     public Vehicle findOne(@PathVariable("vin") String vin){
-        return service.findOne(vin);
+        return vehicleService.findOne(vin);
     }
 
     // Consumes not required for latest update of spring
@@ -52,23 +56,31 @@ public class VehicleController {
         List<Vehicle> updatedVehicles = new ArrayList<Vehicle>();
 
         for (Vehicle vehicle : vehicles) {
-             updatedVehicles.add(service.create(vehicle));
+             updatedVehicles.add(vehicleService.create(vehicle));
         }
         return updatedVehicles;
     }
 
 
+    @Transactional
     @RequestMapping(method = RequestMethod.POST, value = "readings", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public void loadVehicleReadings(@RequestBody Readings readings){ //Request body to convert json to java from the body
-        Vehicle vehicle = service.findOne(readings.getVin());
+        Vehicle vehicle = vehicleService.findOne(readings.getVin());
+
         if(vehicle != null){
-            //readings.setId(vehicle.getReadings().getId());
-            vehicle.setReadings(readings);
-            service.update(vehicle);
+            vehicle.getReadings().add(readings);
+            vehicleService.update(vehicle);
+            loadAlerts(vehicle,readings);
         }
         else
-            System.out.println("Vehicle with vin "+readings.getVin()+ "not found");
+            System.out.println("\n"+"Vehicle with vin "+readings.getVin()+ "not found");
+
+    }
+
+    public void loadAlerts(Vehicle vehicle, Readings readings){
+        vehicle.getAlerts().addAll(alertService.generateAlerts(vehicle, readings));
+        vehicleService.update(vehicle);
 
     }
 
@@ -77,7 +89,7 @@ public class VehicleController {
 
     public void delete(@PathVariable("vin") String vin){
 
-        service.delete(vin);
+        vehicleService.delete(vin);
     }
 
 }

@@ -1,15 +1,14 @@
 package egen.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 @Entity
-@NamedQueries({
-                    @NamedQuery(name = "Vehicle.findAll",query = "SELECT veh from Vehicle veh ORDER BY veh.vin desc"),
-                    @NamedQuery(name = "Vehicle.findByVin",query = "SELECT veh from Vehicle veh where veh.vin=:paramvin")
-
-})
-
+@NamedQueries({@NamedQuery(name = "Vehicle.findAll",query = "SELECT veh from Vehicle veh ORDER BY veh.vin desc"),
+        @NamedQuery(name = "Vehicle.findByVin",query = "SELECT veh from Vehicle veh where veh.vin=:paramvin")})
 public class Vehicle {
 
     @Id //primary key
@@ -17,26 +16,22 @@ public class Vehicle {
     private String vin;
 
     private String make;
+
     private String model;
 
     private String year;
 
-    private String redlineRpm;
+    private Double redlineRpm;
 
-    private String maxFuelVolume;
+    private Double maxFuelVolume;
 
-    private String lastServiceDate;
+    private Date lastServiceDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Readings readings;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Readings> readings = new ArrayList<Readings>();
 
-    public Readings getReadings() {
-        return readings;
-    }
-
-    public void setReadings(Readings readings) {
-        this.readings = readings;
-    }
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Alert> alerts = new ArrayList<Alert>();
 
     public Vehicle(){
 
@@ -66,7 +61,6 @@ public class Vehicle {
         this.model = model;
     }
 
-
     public String getYear() {
         return year;
     }
@@ -75,28 +69,44 @@ public class Vehicle {
         this.year = year;
     }
 
-    public String getRedlineRpm() {
+    public Double getRedlineRpm() {
         return redlineRpm;
     }
 
-    public void setRedlineRpm(String redlineRpm) {
+    public void setRedlineRpm(Double redlineRpm) {
         this.redlineRpm = redlineRpm;
     }
 
-    public String getMaxFuelVolume() {
+    public Double getMaxFuelVolume() {
         return maxFuelVolume;
     }
 
-    public void setMaxFuelVolume(String maxFuelVolume) {
+    public void setMaxFuelVolume(Double maxFuelVolume) {
         this.maxFuelVolume = maxFuelVolume;
     }
 
-    public String getLastServiceDate() {
+    public Date getLastServiceDate() {
         return lastServiceDate;
     }
 
-    public void setLastServiceDate(String lastServiceDate) {
+    public void setLastServiceDate(Date lastServiceDate) {
         this.lastServiceDate = lastServiceDate;
+    }
+
+    public List<Readings> getReadings() {
+        return readings;
+    }
+
+    public void setReadings(List<Readings> readings) {
+        this.readings = readings;
+    }
+
+    public List<Alert> getAlerts() {
+        return alerts;
+    }
+
+    public void setAlerts(List<Alert> alerts) {
+        this.alerts = alerts;
     }
 
     @Override
@@ -106,9 +116,11 @@ public class Vehicle {
                 ", make='" + make + '\'' +
                 ", model='" + model + '\'' +
                 ", year='" + year + '\'' +
-                ", redlineRpm='" + redlineRpm + '\'' +
-                ", maxFuelVolume='" + maxFuelVolume + '\'' +
-                ", lastServiceDate='" + lastServiceDate + '\'' +
+                ", redlineRpm=" + redlineRpm +
+                ", maxFuelVolume=" + maxFuelVolume +
+                ", lastServiceDate=" + lastServiceDate +
+                ", readings=" + readings +
+                ", alerts=" + alerts +
                 '}';
     }
 }

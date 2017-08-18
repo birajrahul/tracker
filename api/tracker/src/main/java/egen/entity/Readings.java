@@ -7,20 +7,20 @@ import java.util.UUID;
 @Entity
 public class Readings {
 
-//    @Id
-//    private String id;
-
-//    @Transient
     @Id
+   private String readingId;
+
+//   @Transient
+    //@Id
     private String vin;
 
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
+    public String getId() {
+        return readingId;
+    }
+
+    public void setId(String id) {
+        this.readingId = id;
+    }
 
     public String getVin() {
         return vin;
@@ -46,7 +46,7 @@ public class Readings {
 
     public Readings(){
 
-   //     this.id = UUID.randomUUID().toString();
+        this.readingId = UUID.randomUUID().toString();
     }
 
 

@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="Tracker Alert">
+    <output-path>$PROJECT_DIR$/out/artifacts/Tracker_Alert</output-path>
+    <root id="root" />
+  </artifact>
+</component>
