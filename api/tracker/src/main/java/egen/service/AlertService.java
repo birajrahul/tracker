@@ -1,12 +1,9 @@
 package egen.service;
 
 
-import egen.Priority;
 import egen.entity.Alert;
 import egen.entity.Readings;
-import egen.entity.Tires;
 import egen.entity.Vehicle;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

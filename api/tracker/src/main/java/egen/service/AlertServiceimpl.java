@@ -1,7 +1,5 @@
 package egen.service;
 
-
-import egen.Priority;
 import egen.Rule;
 import egen.entity.Alert;
 import egen.entity.Readings;
@@ -34,9 +32,8 @@ public class AlertServiceimpl implements AlertService{
             Alert alert = new Alert();
             alert.setVehicle(vehicle);
             alert.setReadings(readings);
-            alert.setPriority(Priority.HIGH.name());
+            alert.setPriority(Rule.HIGHRPM.toString());
             alert.setRule(Rule.HIGHRPM.name());
-
             alerts.add(alert);
         }
     }
@@ -47,7 +44,7 @@ public class AlertServiceimpl implements AlertService{
             Alert alert = new Alert();
             alert.setVehicle(vehicle);
             alert.setReadings(readings);
-            alert.setPriority(Priority.MEDIUM.name());
+            alert.setPriority(Rule.LOWFUEL.toString());
             alert.setRule(Rule.LOWFUEL.name());
 
             alerts.add(alert);
@@ -68,8 +65,9 @@ public class AlertServiceimpl implements AlertService{
             Alert alert = new Alert();
             alert.setVehicle(vehicle);
             alert.setReadings(readings);
-            alert.setPriority(Priority.LOW.name());
+            alert.setPriority(Rule.TIREPRESSURE.toString());
             alert.setRule(Rule.TIREPRESSURE.name());
+
 
             alerts.add(alert);
 
@@ -83,9 +81,8 @@ public class AlertServiceimpl implements AlertService{
             Alert alert = new Alert();
             alert.setVehicle(vehicle);
             alert.setReadings(readings);
-            alert.setPriority(Priority.LOW.name());
+            alert.setPriority(Rule.LOWENGINECOOLANT_ENGINELIGHTON.toString());
             alert.setRule(Rule.LOWENGINECOOLANT_ENGINELIGHTON.name());
-
             alerts.add(alert);
 
         }
